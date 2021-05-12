@@ -7,19 +7,6 @@ import time
 import re
 
 def get_vaccine_details(pincode, age=25):
-	centers_data = get_response(pincode, age)
-	i=0
-	for center in centers_data['centers']:
-		for session in center['sessions']:
-			if session['available_capacity'] > 0 and session['min_age_limit'] <= age:
-				i+=1
-				result = f"{center['name']} has {session['available_capacity']} slots"
-				st.text(result)
-	if i == 0:
-		st.text('No slots available near this pincode for this age range currently. Please check again or check nearby pincodes.')
-
-@st.cache
-def get_response(pincode, age):
 	url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin"
 	querystring = {"pincode": pincode,"date":"12-05-2021"}
 	headers = {
@@ -30,11 +17,21 @@ def get_response(pincode, age):
 		'sec-fetch-mode': "cors",
 		'sec-fetch-dest': "empty"
 		}
-	response = requests.request("GET", url, headers=headers, params=querystring).json()
-	# st.text('Fetched')
-	# centers_data = json.loads(response.text)
-	return response
-
+	try:
+		response = requests.request("GET", url, headers=headers, params=querystring)
+		centers_data = json.loads(response.text)
+		i=0
+		for center in centers_data['centers']:
+			for session in center['sessions']:
+				if session['available_capacity'] > 0 and session['min_age_limit'] <= age:
+					i+=1
+					result = f"{center['name']} has {session['available_capacity']} slots"
+					st.text(result)
+		if i == 0:
+			st.text('No slots available near this pincode for this age range currently. Please check again or check nearby pincodes.')
+	except:
+		st.text('Something went wrong. Try again')
+		
 def keep_checking():
 	st.title('COVID-19 Vaccine availability checker for India.')
 	Your_City_pincode = st.number_input('Input pincode', min_value=0, max_value=999999, value=460001, step=1, help="Input the pincode you wish to check vaccine availablity at..")
