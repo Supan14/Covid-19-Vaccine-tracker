@@ -19,7 +19,7 @@ def get_vaccine_details(pincode, age=25):
 		}
 	try:
 		response = requests.request("GET", url, headers=headers, params=querystring)
-		centers_data = json.loads(response.text)
+		centers_data = json.loads(response.text, encoding="utf-8s")
 		i=0
 		for center in centers_data['centers']:
 			for session in center['sessions']:
@@ -31,7 +31,7 @@ def get_vaccine_details(pincode, age=25):
 			st.text('No slots available near this pincode for this age range currently. Please check again or check nearby pincodes.')
 	except:
 		st.text('Something went wrong. Try again')
-		
+
 def keep_checking():
 	st.title('COVID-19 Vaccine availability checker for India.')
 	Your_City_pincode = st.number_input('Input pincode', min_value=0, max_value=999999, value=460001, step=1, help="Input the pincode you wish to check vaccine availablity at..")
