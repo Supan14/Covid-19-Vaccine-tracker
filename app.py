@@ -19,9 +19,9 @@ def get_vaccine_details(pincode, age=25):
 		}
 	# try:
 	response = requests.request("GET", url, headers=headers, params=querystring)
-	st.write(response)
-	centers_data = json.loads(response.text, encoding="utf-8")
-	st.write(centers_data)
+	# st.write(response)
+	centers_data = json.loads(response.text)
+	# st.write(centers_data)
 
 	i=0
 	for center in centers_data['centers']:
