@@ -30,10 +30,10 @@ def get_response(pincode, age):
 		'sec-fetch-mode': "cors",
 		'sec-fetch-dest': "empty"
 		}
-	response = requests.request("GET", url, headers=headers, params=querystring)
+	response = requests.request("GET", url, headers=headers, params=querystring).json()
 	# st.text('Fetched')
-	centers_data = json.loads(response.text)
-	return centers_data
+	# centers_data = json.loads(response.text)
+	return response
 
 def keep_checking():
 	st.title('COVID-19 Vaccine availability checker for India.')
